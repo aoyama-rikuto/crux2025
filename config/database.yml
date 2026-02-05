@@ -12,7 +12,7 @@ default: &default
   host: localhost
   encoding: unicode
   username: postgres
-  password: password0
+  password: burumau
 
 development:
   <<: *default

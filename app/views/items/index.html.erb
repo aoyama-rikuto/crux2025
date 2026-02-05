@@ -1,0 +1,99 @@
+<section class="section">
+  <div class="container">
+
+    <!-- flashメッセージ -->
+    <% if flash[:notice] %>
+      <div class="notification is-success is-light">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <div class="notification is-danger is-light">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <!-- タイトル -->
+    <h1 class="title is-3">在庫一覧</h1>
+
+    <!-- 商品登録ボタン -->
+    <div class="mb-4">
+      <%= link_to "商品登録", new_item_path, class: "button is-primary" %>
+    </div>
+
+    <!-- 商品テーブル -->
+    <table class="table is-bordered is-fullwidth">
+      <!-- テーブルのカラム名 -->
+      <thead>
+        <tr>
+          <th>商品名</th>
+          <th class="has-text-centered" style="width: 150px;">在庫数</th>
+          <th style="width: 120px;"></th>
+          <th style="width: 120px;"></th>
+        </tr>
+      </thead>
+
+      <!-- DB取得したレコードをループ表示 -->
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <!-- 商品名、在庫数 -->
+            <td><%= item.item_name %></td>
+            <td class="has-text-centered">
+              <%= item.inventory_quantity %>
+            </td>
+
+            <!-- 編集ボタン -->
+            <td class="has-text-centered">
+              <!-- edit_item_path = 商品編集画面(/items/item.id/edit)に遷移 -->
+              <%= link_to "編集",
+                    edit_item_path(item),
+                    class: "button is-small is-info" %>
+            </td>
+
+            <!-- 削除ボタン -->
+            <td class="has-text-centered">
+              <!-- 押下時にモーダル表示のjsを実行 -->
+              <button
+                class="button is-small is-danger js-open-modal"
+                data-item-id=<%= item.id %>>
+                削除
+              </button>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 削除ボタン押下時の確認用モーダル -->
+  <div class="modal" id="delete-modal">
+    <div class="modal-background"></div>
+
+    <div class="modal-card" style="width: 30%;">
+      <section class="modal-card-body">
+
+        <!-- 確認メッセージ -->
+        <p class="mb-5 has-text-centered">削除しますか？</p>
+
+        <!-- はい、いいえボタン -->
+        <div class="buttons is-centered">
+          <form id="delete-form" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="button is-danger">
+              はい
+            </button>
+          </form>
+
+          <button class="button js-close-modal">
+            いいえ
+          </button>
+        </div>
+      </section>
+
+      
+
+    </div>
+  </div>
+</section>
