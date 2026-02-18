@@ -1,17 +1,17 @@
 class ItemsController < ApplicationController
     
+    #レコードが見つからなかった時の例外をキャッチ
     rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
     #在庫一覧画面
     def index
-        @items = Item.all
-        render("items/index")
+        #idの昇順に並び替えて表示
+        @items = Item.order(:id)
     end
 
     #商品登録画面
     def new
         @item = Item.new
-        render("items/new")
     end
 
     #商品登録処理
@@ -27,13 +27,12 @@ class ItemsController < ApplicationController
     #商品編集画面
     def edit
         @item = Item.find(params[:id])
-        render("items/edit")
     end
 
     #商品情報更新処理
     def update
-        @item = Item.new(item_params)
-        if @item.save
+        @item = Item.find(params[:id])
+        if @item.update(item_params)
             redirect_to items_path, notice: "更新しました。"
         else
             render :edit, status: :unprocessable_entity
@@ -54,7 +53,7 @@ class ItemsController < ApplicationController
     end
 
     #商品が見つからない場合のリダイレクトとalertメッセージ
-    def item_not_found
+    def record_not_found
         redirect_to items_path, alert: "指定された商品は存在しません"
     end
 end
